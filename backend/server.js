@@ -139,6 +139,25 @@ app.patch("/api/usuarios/:id/estado", (req, res) => {
 
 
 
+
+
+
+//--------------------------------------------- estas son del modulo de asignaciones
+
+app.get("/api/TodasAsignaciones", (req, res) => {
+  const query = "SELECT IDAsignacion, Tester, NombreAsignacion, FechaAsignacion, FechaEstimada, FechaFinalizacion, Estado FROM Asignacion" 
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error al obtener asignaciones:", err);
+      return res.status(500).json({ message: "Error en el servidor" });
+    }
+    res.json(results);
+  });
+})
+
+
+
+
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log("🚀 Servidor corriendo en http://localhost:3000");

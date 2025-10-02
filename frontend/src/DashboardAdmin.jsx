@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CrearUsuario from "./Componentes/CrearUsuario";
+import AsignarTareas from "./Componentes/AsignarTareas";
 
 function DashboardAdmin() {
   const [contenido, setContenido] = useState(<h4>Sistema QA</h4>);
@@ -7,16 +8,16 @@ function DashboardAdmin() {
   const handleMenuClick = (opcion) => {
     switch (opcion) {
       case "crearUsuario":
-        setContenido(<CrearUsuario />);
+        setContenido(<CrearUsuario/>);
         break;
       case "analisis":
-        setContenido(<p>La grafica de analisis de datos</p>);
+        setContenido(<p>Aca debe de ir todo lo relacionado el analisis de datos</p>);
         break;
       case "perfil":
         setContenido(<p>Aca debe de ir todo lo relacionado al perfil</p>);
         break;
       case "tarea":
-        setContenido(<p>aca debe de ir todo relacionado a asignar tareas</p>);
+        setContenido(<AsignarTareas/>);
         break;
       default:
         setContenido(<h4>Bienvenido al sistema</h4>);
