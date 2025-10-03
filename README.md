@@ -18,4 +18,5 @@ _npm install_
 Seguido para inicializar el servidor local se digita
 _npm run dev_
 
-node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+con este comando se genera un token de sesion el cual se debe de configurar en las variables de entorno y seguido de ello configurarlo en el servidor
+_node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"_

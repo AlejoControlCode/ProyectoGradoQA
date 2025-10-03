@@ -195,9 +195,6 @@ app.patch("/api/usuarios/:id/estado", (req, res) => {
 
 
 
-
-
-
 //--------------------------------------------- estas son del modulo de asignaciones
 
 app.get("/api/TodasAsignaciones", (req, res) => {
@@ -255,10 +252,31 @@ app.post("/api/CrearTarea", (req, res) => {
 });
 
 
-// ---------------------------------------------- estas son del modulo de tareas
+// ---------------------------------------------- estas son del modulo de Analisis de datos
+app.get("/api/GenerarMetricas", (req, res) => {
+  const { desde, hasta } = req.query; // 👈 vienen por query string
+
+  const query = `
+    SELECT
+      COUNT(*) AS totalAsignaciones,
+      COUNT(CASE WHEN FechaFinalizacion IS NULL THEN 1 END) AS TareasPendintes,
+      COUNT(CASE WHEN FechaFinalizacion IS NOT NULL THEN 1 END) AS TareasTerminadas
+    FROM Asignacion
+    WHERE FechaAsignacion BETWEEN ? AND ?
+  `;
+
+  db.query(query, [desde, hasta], (err, results) => {
+    if (err) {
+      console.error("Error al generar métricas:", err);
+      return res.status(500).json({ message: "Error en el servidor" });
+    }
+    res.json(results[0]);
+  });
+});
 
 
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log("🚀 Servidor corriendo en http://localhost:3000");
 });
+

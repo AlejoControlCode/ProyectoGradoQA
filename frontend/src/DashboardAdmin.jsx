@@ -1,6 +1,7 @@
 import { useState } from "react";
 import CrearUsuario from "./Componentes/CrearUsuario";
 import AsignarTareas from "./Componentes/AsignarTareas";
+import AnalisisDatos from "./Componentes/AnalisisDatos";
 
 function DashboardAdmin() {
   const [contenido, setContenido] = useState(<h4>Sistema QA</h4>);
@@ -11,7 +12,7 @@ function DashboardAdmin() {
         setContenido(<CrearUsuario/>);
         break;
       case "analisis":
-        setContenido(<p>Aca debe de ir todo lo relacionado el analisis de datos</p>);
+        setContenido(<AnalisisDatos/>);
         break;
       case "perfil":
         setContenido(<p>Aca debe de ir todo lo relacionado al perfil</p>);
