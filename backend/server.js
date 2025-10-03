@@ -275,6 +275,53 @@ app.get("/api/GenerarMetricas", (req, res) => {
 });
 
 
+
+//--------------------------------------------- estas son del modulo de Mi Perfil
+// Buscar usuario por cédula
+app.get("/api/usuario/:cedula", (req, res) => {
+  const cedula = req.params.cedula;
+
+  const query = `SELECT IDcedula, Nombres, Correo, Telefono, Ciudad, Cargo, rol, Estado
+                 FROM Usuario WHERE IDcedula = ?`;
+
+  db.query(query, [cedula], (err, results) => {
+    if (err) {
+      console.error("Error al obtener usuario:", err);
+      return res.status(500).json({ message: "Error en el servidor" });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    res.json(results[0]);
+  });
+});
+
+// Editar usuario por cédula
+app.put("/api/usuario/:cedula", (req, res) => {
+  const cedula = req.params.cedula;
+  const { Nombres, Correo, Telefono, Ciudad, Cargo } = req.body;
+
+  const query = `UPDATE Usuario 
+                 SET Nombres=?, Correo=?, Telefono=?, Ciudad=?, Cargo=?
+                 WHERE IDcedula=?`;
+
+  db.query(query, [Nombres, Correo, Telefono, Ciudad, Cargo, cedula], (err, result) => {
+    if (err) {
+      console.error("Error al actualizar usuario:", err);
+      return res.status(500).json({ message: "Error en el servidor" });
+    }
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    res.json({ success: true, message: "Usuario actualizado correctamente" });
+  });
+});
+
+
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log("🚀 Servidor corriendo en http://localhost:3000");

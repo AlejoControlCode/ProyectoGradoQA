@@ -1,7 +1,8 @@
 import { useState } from "react";
-import CrearUsuario from "./Componentes/CrearUsuario";
-import AsignarTareas from "./Componentes/AsignarTareas";
-import AnalisisDatos from "./Componentes/AnalisisDatos";
+import CrearUsuario from "./ComponentesAdmin/CrearUsuario";
+import AsignarTareas from "./ComponentesAdmin/AsignarTareas";
+import AnalisisDatos from "./ComponentesAdmin/AnalisisDatos";
+import MiPerfil from "./ComponentesAdmin/MiPerfil";
 
 function DashboardAdmin() {
   const [contenido, setContenido] = useState(<h4>Sistema QA</h4>);
@@ -15,7 +16,7 @@ function DashboardAdmin() {
         setContenido(<AnalisisDatos/>);
         break;
       case "perfil":
-        setContenido(<p>Aca debe de ir todo lo relacionado al perfil</p>);
+        setContenido(<MiPerfil/>);
         break;
       case "tarea":
         setContenido(<AsignarTareas/>);
@@ -53,7 +54,7 @@ function DashboardAdmin() {
                 className="btn btn-outline-light w-100"
                 onClick={() => handleMenuClick("perfil")}
               >
-                Mi Perfil
+                Gestion de Usuarios
               </button>
             </li>
             <li className="nav-item mb-2">
