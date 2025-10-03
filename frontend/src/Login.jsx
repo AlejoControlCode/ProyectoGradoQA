@@ -20,11 +20,11 @@ function Login() {
       });
 
       if (res.data.success) {
-        setMensaje("✅ Bienvenido " + res.data.user.Nombres);
+        setMensaje("✅ Bienvenido " + res.data.user.nombres);
 
 
         setTimeout(() => {
-          navigate("/dashboard");
+          navigate(res.data.redirectTo); 
         }, 1000);
       } else {
         setMensaje("❌ Credenciales incorrectas");
@@ -71,7 +71,7 @@ return (
               onChange={(e) => setRol(e.target.value)}
             >
               <option value="Administrador">Administrador</option>
-              <option value="Agente QA">Agente QA</option>
+              <option value="AgenteQA">Agente QA</option>
             </select>
           </div>
 

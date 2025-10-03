@@ -38,7 +38,7 @@ function CrearUsuario() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3000/api/usuarios", {
+      const res = await fetch("http://localhost:3000/api/Crearusuarios", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -308,7 +308,7 @@ function CrearUsuario() {
                       >
                         <option value="">Seleccione rol</option>
                         <option value="Administrador">Administrador</option>
-                        <option value="Agente QA">Agente QA</option>
+                        <option value="AgenteQA">Agente QA</option>
                       </select>
                     </div>
 

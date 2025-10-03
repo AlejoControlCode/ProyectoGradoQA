@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import mysql from "mysql2";
 import dotenv from "dotenv";
+import session from "express-session";
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -18,6 +19,13 @@ const db = mysql.createConnection({
   password: "",      
   database: process.env.DB_NAME
 });
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 1000 * 60 * 30 } // 30 minutos
+}));
 
 // Verificar conexión
 db.connect(err => {
@@ -48,12 +56,60 @@ app.post("/api/login", (req, res) => {
     }
 
     if (result.length > 0) {
-      return res.json({ success: true, message: "Login exitoso", user: result[0] });
+      const user = result[0];
+
+      // 2️⃣ Validar si el usuario está activo
+      if (user.Estado !== 1) {
+        return res.status(403).json({ success: false, message: "Usuario inactivo, contacte al administrador." });
+      }
+
+      // 1️⃣ Guardar sesión
+      req.session.userId = user.IDcedula;
+      req.session.rol = user.Rol;
+
+      // 3️⃣ Diferenciar vistas según el rol
+      let redirectTo = user.rol === "Administrador" ? "/DashboardAdmin" : "/DashboardAgenteQA";
+
+
+
+      // 4️⃣ Registrar ingreso en la tabla Ingreso
+      const insertIngreso = `
+        INSERT INTO Ingreso (IDcedulaFK, FechaIngreso, Nombres, InicioSesion)
+        VALUES (?, NOW(), ?, ?)
+      `;
+
+      db.query(insertIngreso, [user.IDcedula, user.Nombres, true], (err2) => {
+        if (err2) {
+          console.error("Error al registrar ingreso:", err2);
+          // no bloquea el login, solo lo reporta
+        }
+      });
+
+      return res.json({
+        success: true,
+        message: "Login exitoso",
+        user: { id: user.IDcedula, 
+                correo: user.Correo, 
+                rol: user.Rol,
+                nombres: user.Nombres },
+        redirectTo
+      });
+
     } else {
+      // ❌ Opción: guardar intento fallido
+      const insertIngresoFail = `
+        INSERT INTO Ingreso (FechaIngreso, Nombres, InicioSesion)
+        VALUES (NOW(), ?, ?)
+      `;
+      db.query(insertIngresoFail, ["Intento fallido", false], (err3) => {
+        if (err3) console.error("Error registrando intento fallido:", err3);
+      });
+
       return res.status(401).json({ success: false, message: "Credenciales incorrectas" });
     }
   });
 });
+
 
 // enlista todos los usuarios en la opcion de usuario
 app.get("/api/usuarios", (req, res) => {
@@ -69,7 +125,7 @@ app.get("/api/usuarios", (req, res) => {
 
 
 // Inserta registros en la tabla usuario
-app.post("/api/usuarios", (req, res) => {
+app.post("/api/Crearusuarios", (req, res) => {
   const {
     IDcedula,
     Nombres,
@@ -155,7 +211,51 @@ app.get("/api/TodasAsignaciones", (req, res) => {
   });
 })
 
+app.post("/api/CrearTarea", (req, res) => {
+  const {
+        Tester,
+        NombreAsignacion,
+        TipoAsignacion,
+        FechaEstimada,
+        FechaAsignacion,
+        FechaFinalizacion,
+        FechaActualizacion,
+        BitacoraComentarios,
+        Estado,
+        IDcedula} = req.body;
+        
+  const query = `
+    INSERT INTO Asignacion 
+    (Tester, NombreAsignacion, TipoAsignacion, FechaEstimada, FechaAsignacion, FechaFinalizacion, FechaActualizacion, BitacoraComentarios, Estado, IDcedula) 
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+  `;
 
+  db.query(
+    query,
+    [
+      Tester,
+      NombreAsignacion,
+      TipoAsignacion,
+      FechaEstimada,
+      FechaAsignacion,
+      FechaFinalizacion,
+      FechaActualizacion,
+      BitacoraComentarios,
+      Estado,
+      IDcedula
+    ],
+    (err, result) => {
+      if (err) {
+        console.error("Error al insertar tarea:", err);
+        return res.status(500).json({ message: "Error en el servidor" });
+      }
+      res.json({ success: true, message: "Tarea creada correctamente" });
+    }
+  );
+});
+
+
+// ---------------------------------------------- estas son del modulo de tareas
 
 
 // Iniciar servidor

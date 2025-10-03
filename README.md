@@ -17,3 +17,5 @@ Inicializar los modulos de node esto lo hacen con:
 _npm install_
 Seguido para inicializar el servidor local se digita
 _npm run dev_
+
+node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
