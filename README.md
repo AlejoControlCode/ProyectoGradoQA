@@ -20,3 +20,11 @@ _npm run dev_
 
 con este comando se genera un token de sesion el cual se debe de configurar en las variables de entorno y seguido de ello configurarlo en el servidor
 _node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"_
+
+para almacenar las imagenes que son las evidencias de las pruebas en la nube para este caso Cloudinary se deben de llenar las siguientes variables de entorno
+
+_CLOUD_NAME_
+_CLOUDINARY_API_KEY_
+_CLOUDINARY_API_SECRET_
+
+Todas estas se sacan de la plataforma de https://cloudinary.com/

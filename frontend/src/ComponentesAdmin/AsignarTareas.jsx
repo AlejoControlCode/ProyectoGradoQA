@@ -20,7 +20,7 @@ function AsignarTareas() {
 
   // Cargar asignaciones
   const fetchAsignaciones = () => {
-    fetch("http://localhost:3000/api/TodasAsignaciones")
+    fetch("http://localhost:3000/api/TodasAsignaciones", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setAsignacion(data))
       .catch((err) => console.error("Error cargando Asignaciones:", err));
@@ -28,7 +28,7 @@ function AsignarTareas() {
 
   // Cargar usuarios y filtrar solo QA activos
   const fetchUsuarios = () => {
-    fetch("http://localhost:3000/api/usuarios")
+    fetch("http://localhost:3000/api/usuarios", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setUsuariosQA(data))
       .catch((err) => console.error("Error cargando usuarios:", err));
@@ -55,6 +55,7 @@ function AsignarTareas() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+        credentials: "include" 
       });
 
       const data = await res.json();
@@ -173,6 +174,7 @@ function AsignarTareas() {
           </table>
         </div>
 
+
         {/* Modal */}
         <div
           className="modal fade"
@@ -191,7 +193,7 @@ function AsignarTareas() {
                     data-bs-dismiss="modal"
                   ></button>
                 </div>
- 
+
                 <div className="modal-body">
                   <div className="row g-3">
 
@@ -214,6 +216,7 @@ function AsignarTareas() {
                       </select>
                     </div>
 
+                    {/* Campo Tester (auto completado) */}
                     <div className="col-md-6">
                       <label className="form-label">Tester</label>
                       <input
@@ -221,12 +224,11 @@ function AsignarTareas() {
                         className="form-control"
                         name="Tester"
                         value={formData.Tester}
-                        onChange={handleChange}
-                        required
-                        readonly
+                        readOnly // 👈 React requiere camelCase
                       />
                     </div>
 
+                    {/* Nombre Asignación */}
                     <div className="col-md-6">
                       <label className="form-label">Nombre Asignación</label>
                       <input
@@ -239,6 +241,7 @@ function AsignarTareas() {
                       />
                     </div>
 
+                    {/* Tipo Asignación */}
                     <div className="col-md-6">
                       <label className="form-label">Tipo Asignación</label>
                       <input
@@ -250,6 +253,7 @@ function AsignarTareas() {
                       />
                     </div>
 
+                    {/* Fechas */}
                     <div className="col-md-6">
                       <label className="form-label">Fecha Estimada</label>
                       <input
@@ -280,10 +284,10 @@ function AsignarTareas() {
                         name="FechaFinalizacion"
                         value={formData.FechaFinalizacion}
                         onChange={handleChange}
-                        
                       />
                     </div>
 
+                    {/* Comentarios */}
                     <div className="col-md-6">
                       <label className="form-label">Comentarios</label>
                       <input
@@ -295,6 +299,7 @@ function AsignarTareas() {
                       />
                     </div>
 
+                    {/* Estado */}
                     <div className="col-md-6">
                       <label className="form-label">Estado</label>
                       <select
@@ -306,7 +311,7 @@ function AsignarTareas() {
                         <option value="1">Terminado</option>
                         <option value="0">Pendiente</option>
                       </select>
-                    </div>  
+                    </div>
 
                   </div>
                 </div>
@@ -328,6 +333,7 @@ function AsignarTareas() {
             </div>
           </div>
         </div>
+
 
       </div>
     </div>

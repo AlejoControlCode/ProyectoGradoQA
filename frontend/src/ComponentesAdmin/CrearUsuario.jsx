@@ -18,7 +18,7 @@ function CrearUsuario() {
 
   // Cargar usuarios al inicio
   const fetchUsuarios = () => {
-    fetch("http://localhost:3000/api/usuarios")
+    fetch("http://localhost:3000/api/usuarios", { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setUsuarios(data))
       .catch((err) => console.error("Error cargando usuarios:", err));
@@ -42,6 +42,7 @@ function CrearUsuario() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+        credentials: "include" 
       });
 
       const data = await res.json();
@@ -89,6 +90,7 @@ function CrearUsuario() {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ Estado: nuevoEstado }),
+        credentials: "include" 
       });
 
       const data = await res.json();

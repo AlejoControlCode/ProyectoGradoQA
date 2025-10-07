@@ -7,7 +7,7 @@ function PerfilUsuario() {
 
   const buscarUsuario = async () => {
     try {
-      const res = await fetch(`http://localhost:3000/api/usuario/${cedula}`);
+      const res = await fetch(`http://localhost:3000/api/usuario/${cedula}`, { credentials: "include" });
       if (!res.ok) throw new Error("Usuario no encontrado");
       const data = await res.json();
       setUsuario(data);
@@ -31,6 +31,7 @@ function PerfilUsuario() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+        credentials: "include" 
       });
       const data = await res.json();
 

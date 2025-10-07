@@ -25,7 +25,7 @@ function AnalisisDatos() {
     e.preventDefault();
     try {
       const res = await fetch(
-        `http://localhost:3000/api/GenerarMetricas?desde=${fechas.desde}&hasta=${fechas.hasta}`
+        `http://localhost:3000/api/GenerarMetricas?desde=${fechas.desde}&hasta=${fechas.hasta}`, { credentials: "include" }
       );
       const data = await res.json();
       setMetricas(data);

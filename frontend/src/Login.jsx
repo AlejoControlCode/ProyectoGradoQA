@@ -8,33 +8,37 @@ function Login() {
   const [rol, setRol] = useState("Administrador");
   const [mensaje, setMensaje] = useState("");
 
-  const navigate = useNavigate(); // 🚀 para redirigir
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:3000/api/login", {
-        correo,
-        contrasenia,
-        rol,
-      });
+      const res = await axios.post(
+        "http://localhost:3000/api/login",
+        { correo, contrasenia, rol },
+        { withCredentials: true } // 👈 importante para manejar la sesión
+      );
 
       if (res.data.success) {
+        // Guardamos datos del usuario en el almacenamiento local
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+
         setMensaje("✅ Bienvenido " + res.data.user.nombres);
 
-
         setTimeout(() => {
-          navigate(res.data.redirectTo); 
+          navigate(res.data.redirectTo);
         }, 1000);
       } else {
         setMensaje("❌ Credenciales incorrectas");
       }
     } catch (err) {
-      setMensaje("❌ Error en el servidor");
+      setMensaje(
+        err.response?.data?.message || "❌ Error al conectar con el servidor"
+      );
     }
   };
 
-return (
+  return (
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <div className="card shadow p-4" style={{ width: "22rem" }}>
         <h3 className="text-center mb-4">Inicio de Sesión</h3>

@@ -7,6 +7,27 @@ import MiPerfil from "./ComponentesAdmin/MiPerfil";
 function DashboardAdmin() {
   const [contenido, setContenido] = useState(<h4>Sistema QA</h4>);
 
+  const handleLogout = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/logout", {
+        method: "POST",
+        credentials: "include", // 👈 importante: incluye la cookie de sesión
+      });
+
+      if (res.ok) {
+        // Borra cualquier dato del usuario almacenado en el frontend
+        localStorage.removeItem("usuario");
+        alert("Sesión cerrada correctamente");
+        window.location.href = "/"; // Redirige al login
+      } else {
+        alert("Error al cerrar sesión");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+
   const handleMenuClick = (opcion) => {
     switch (opcion) {
       case "crearUsuario":
@@ -64,6 +85,15 @@ function DashboardAdmin() {
               >
                 Asignar Tarea
               </button>
+            </li>
+            <li className="nav-item mb-2">
+              <button
+                onClick={handleLogout}
+                className="btn btn-outline-light"
+              >
+                Cerrar sesión
+              </button>
+
             </li>
           </ul>
         </div>
